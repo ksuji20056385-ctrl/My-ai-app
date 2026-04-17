@@ -1,0 +1,19 @@
+name: Build Android APK
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Android APK
+        uses: swantzter/web-to-apk@v1.2
+        with:
+          # The name of your app
+          app-name: "My AI App"
+          # The URL or local path to your index file
+          url: "https://your-github-username.github.io/my-ai-app/index.html"
+          # The icon for your app (optional)
+          icon-path: "./icon.png"
