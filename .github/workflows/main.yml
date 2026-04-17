@@ -1,24 +1,20 @@
-name: Convert Web to APK
+name: Build Android APK
 on: [push]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Build APK from Web Files
-        uses: darkshredder/website-to-apk-action@v1.1.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          # This is the folder where your index.html is located
-          # If it's in the main folder, just use "./"
-          build-folder-path: "./"
-          app-name: "MyAIApp"
-          output-folder-path: "output-apk/"
-
-      - name: Upload APK as Artifact
-        uses: actions/upload-artifact@v4
+          node-version: 18
+      - run: npm install
+      - run: npm run build
+      - name: Build with Capacitor
+        run: |
+          npx cap add android
+          npx cap sync
+      - uses: actions/upload-artifact@v3
         with:
-          name: My-Android-App
-          path: output-apk/
+          name: app-release
+          path: android/app/build/outputs/apk/debug/app-debug.apk
