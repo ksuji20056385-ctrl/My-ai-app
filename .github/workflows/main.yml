@@ -61,10 +61,8 @@ jobs:
       - name: Patch Gradle for Kotlin Duplicates
         working-directory: ${{ env.APP_DIR }}
         run: |
-          # This command injects a fix into the Android build file to resolve duplicate Kotlin classes
           if [ -f "android/build.gradle" ]; then
             sed -i '/allprojects {/a \    configurations.all {\n        resolutionStrategy.eachDependency { details ->\n            if (details.requested.group == "org.jetbrains.kotlin") {\n                details.useVersion "1.8.22"\n            }\n        }\n    }' android/build.gradle
-            echo "Patch applied to android/build.gradle"
           fi
 
       - name: Build Android APK
@@ -77,10 +75,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: pcos-app-apk
+          # Adding the run ID makes the name unique even if you retry the build
+          name: pcos-app-apk-${{ github.run_id }}
           path: "${{ env.APP_DIR }}/android/app/build/outputs/apk/debug/app-debug.apk"
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: pcos-app-apk
-          path: "${{ env.APP_DIR }}/android/app/build/outputs/apk/debug/app-debug.apk"
+          if-no-files-found: error
