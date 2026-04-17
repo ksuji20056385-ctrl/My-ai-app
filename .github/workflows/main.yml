@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Convert Web to APK
 on: [push]
 
 jobs:
@@ -8,12 +8,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build Android APK
-        uses: swantzter/web-to-apk@v1.2
+      - name: Build APK from Web Files
+        uses: darkshredder/website-to-apk-action@v1.1.0
         with:
-          # The name of your app
-          app-name: "My AI App"
-          # The URL or local path to your index file
-          url: "https://your-github-username.github.io/my-ai-app/index.html"
-          # The icon for your app (optional)
-          icon-path: "./icon.png"
+          # This is the folder where your index.html is located
+          # If it's in the main folder, just use "./"
+          build-folder-path: "./"
+          app-name: "MyAIApp"
+          output-folder-path: "output-apk/"
+
+      - name: Upload APK as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: My-Android-App
+          path: output-apk/
